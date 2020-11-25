@@ -16,8 +16,14 @@ export default {
               TabTwoScreen: 'two',
             },
           },
+          TabThree: {
+            screens: {
+              TabThreeScreen: 'three',
+            },
+          }
         },
       },
+      MovieDetailsScreen: "movie_details",
       NotFound: '*',
     },
   },
