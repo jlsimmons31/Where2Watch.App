@@ -17,9 +17,9 @@ export default function HomeScreen({ navigation }:any) {
   const renderSearchResults = (results:Array<any>) => {
     if (results && results.length) {
       return results.map(x => (
-        <TouchableOpacity activeOpacity={0.9} key={x.imdbID} onPress={() => onPressMovie(x)}>
+        <TouchableOpacity activeOpacity={0.9} key={x.id} onPress={() => onPressMovie(x)}>
           <View style={styles.resultView}>
-            <Image style={styles.resultImage} source={{uri: x.Poster}} />
+            <Image style={styles.resultImage} source={{uri: global_vars.build_jw_img_url(x.poster)}} />
           </View>
         </TouchableOpacity>
         ));
@@ -42,15 +42,16 @@ export default function HomeScreen({ navigation }:any) {
   const search = (query:String) => {
     if (query) {
       query = sanitizeSearchQuery(query);
-      let queryStr = "?type=movie&s=" + query;
-      let config = {
-        headers: global_vars.imdb_headers
-      }
-      let reqUrl = global_vars.imdb_endpoint + queryStr;
+      // let queryStr = "?type=movie&s=" + query;
+      // let config = {
+      //   headers: global_vars.imdb_headers
+      // }
+      // let reqUrl = global_vars.imdb_endpoint + queryStr;
+      let reqUrl = global_vars.build_jw_api_url(query);
       console.log("Making request to: " + reqUrl);
-      Axios.get(reqUrl, config).then((res) => {
-          setSearchResults(res.data.Search);
-      })
+      Axios.get(reqUrl).then((res) => {
+          setSearchResults(res.data.items);
+      });
     }
   };
 

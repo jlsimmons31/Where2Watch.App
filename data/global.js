@@ -8,7 +8,17 @@ const global_vars = {
         "x-rapidapi-host": "movie-database-imdb-alternative.p.rapidapi.com",
         "x-rapidapi-key": "rMumYZoCdKycBWeXKQcoUMIjnBkCM31F"
     },
-    streaming_endpoint: is_android_test ? streaming_endpoint_android : "http://ssapi.johnlsimmons.com/getMovie"
+    streaming_endpoint: is_android_test ? streaming_endpoint_android : "http://ssapi.johnlsimmons.com/getMovie",
+    build_jw_api_url: (query) => {
+        return "https://apis.justwatch.com/content/titles/en_US/popular?language=en&body=%7B%22page_size%22:20,%22page%22:1,%22content_types%22:[%22movie%22],%22query%22:"
+        + "%22" + query + "%22%7D";
+        // It's basically json in the URL
+        // %22's are quotes
+        // %7B and %7D are { and }
+    },
+    build_jw_img_url: (img_path) => {
+        return "https://images.justwatch.com" + img_path.replace("{profile}", "s166/image.webp");
+    }
 };
 
 const colors = {
