@@ -40,6 +40,9 @@ export default function BottomTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-list" color={color} />,
         }}
+        style={{
+          backgroundColor: colors.main_background
+        }}
       />
       <BottomTab.Screen
         name="Settings"
@@ -82,7 +85,7 @@ function TabTwoNavigator() {
       <TabTwoStack.Screen
         name="MyListScreen"
         component={MyListScreen}
-        options={{ headerTitle: 'My List' }}
+        options={{headerShown: false}}
       />
     </TabTwoStack.Navigator>
   );
@@ -96,7 +99,10 @@ function TabThreeNavigator() {
       <TabThreeStack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
-        options={{ headerTitle: 'Settings' }}
+        options={{ headerTitle: 'Settings', headerStyle: {
+          backgroundColor: colors.main_background
+        },
+        headerTitleAlign: "left", headerTintColor: 'black' }}
       />
     </TabThreeStack.Navigator>
   );

@@ -59,7 +59,7 @@ export default function HomeScreen({ navigation }:any) {
     <View style={styles.container}>
       {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
       <View style={styles.searchBarContainer}>
-        <TextInput style={styles.searchBar} placeholder="Search for a movie" value={searchQuery}
+        <TextInput placeholderTextColor={colors.main_gray4} style={styles.searchBar} placeholder="Search for a movie" value={searchQuery}
           onChangeText={text => setSearchQuery(text)}
           onSubmitEditing={() => search(searchQuery)} />
         <Ionicons size={30} name="ios-search" color="#000000" 
@@ -121,21 +121,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     display: 'flex',
     flexDirection: "row",
-    padding: 10,
+    // padding: 10,
     // justifyContent: 'center',
     // alignItems: 'center',
     flexWrap: 'wrap'
   },
   resultView: {
-    elevation: 8,
-    width: 110, // Width and height of result images
-    height: 159,
-    margin: 5,
-    borderColor: 'white',
-    borderWidth: 1
+    // elevation: 8,
+    width: 132, // Width and height of result images
+    height: 194,
+    margin: 2,
+    backgroundColor: "#00000000"
   },
   resultImage: {
     width: '100%',
-    height: '100%'
+    height: '100%',
+    borderRadius: 4,    
   }
 });

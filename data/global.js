@@ -18,6 +18,11 @@ const global_vars = {
     },
     build_jw_img_url: (img_path) => {
         return "https://images.justwatch.com" + img_path.replace("{profile}", "s166/image.webp");
+    },
+    build_jw_details_url: (tm_id) => {
+        return "https://apis.justwatch.com/content/titles/movie/"
+            + tm_id.replace("tm", "")
+            + "/locale/en_US?language=en"
     }
 };
 
@@ -30,7 +35,20 @@ const colors = {
     main_gray4: "#7A7A7A",
     main_gray5: "#666666",
     main_white: "#FFFFFF",
+    transparent_gray3: "#888888BF",
+    transparent_gray4: "#7A7A7ABF",
+    half_transparent_black: "#00000099",
     half_transparent: "#FFFFFF99"
 }
 
-module.exports = { global_vars, colors };
+const global_state = {
+    initial_my_list: []
+}
+
+const screens = { my_list: null };
+
+const global_streaming_services = {};
+const global_rental_services = {};
+
+module.exports = { global_vars, colors, screens, global_state,
+     global_streaming_services, global_rental_services };

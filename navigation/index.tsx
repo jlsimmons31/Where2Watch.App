@@ -40,6 +40,7 @@ function RootNavigator() {
     <Stack.Navigator 
       screenOptions=
         {{ headerShown: true, 
+          headerBackTitle: "Back",
         headerStyle:{ backgroundColor: colors.main_blue },
         }} >
       <Stack.Screen name="Root" component={BottomTabNavigator} options={{ headerTitle: (props) => renderHeader() }} />
