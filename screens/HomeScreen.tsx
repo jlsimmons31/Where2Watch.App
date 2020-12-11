@@ -58,8 +58,10 @@ export default function HomeScreen({ navigation }:any) {
   return (
     <View style={styles.container}>
       {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" /> */}
-      <View style={styles.searchBarContainer}>
-        <TextInput placeholderTextColor={colors.main_gray4} style={styles.searchBar} placeholder="Search for a movie" value={searchQuery}
+      <View style={styles.searchBarContainer} onTouchStart={() => { this.searchBar_textInput.focus(); }}>
+        <TextInput
+          ref={(input) => { this.searchBar_textInput = input; }}
+          placeholderTextColor={colors.main_gray4} style={styles.searchBar} placeholder="Search for a movie" value={searchQuery}
           onChangeText={text => setSearchQuery(text)}
           onSubmitEditing={() => search(searchQuery)} />
         <Ionicons size={30} name="ios-search" color="#000000" 
@@ -128,7 +130,7 @@ const styles = StyleSheet.create({
   },
   resultView: {
     // elevation: 8,
-    width: 132, // Width and height of result images
+    width: 126, // Width and height of result images
     height: 194,
     margin: 2,
     backgroundColor: "#00000000"

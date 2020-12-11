@@ -9,7 +9,8 @@ import { Text, View } from '../components/Themed';
 // import { instance_data } from '../data/instance_data'
 // @ts-ignore
 import { global_vars, screens, colors, global_state, 
-  global_streaming_services, global_rental_services } from '../data/global'
+  global_streaming_services, global_rental_services,
+  streaming_services_settings } from '../data/global'
 
 export default class MyListScreen extends React.Component {
 
@@ -40,7 +41,8 @@ export default class MyListScreen extends React.Component {
       "netflix": "Netflix",
       "hulu": "Hulu",
       "amazon_prime": "Amazon Prime",
-      "disney": "Disney Plus"
+      "disney": "Disney+",
+      "hbo_max": "HBO Max"
     };
     let rent_providers = {
       "amazon_hd": "Amazon Prime",
@@ -50,7 +52,10 @@ export default class MyListScreen extends React.Component {
     // TODO: allow user to disable some in settings
     if (global_streaming_services[x.id]) {
       for (let s in stream_providers) {
-        if (global_streaming_services[x.id][s])
+        let s_name = stream_providers[s];
+        if (global_streaming_services[x.id][s]
+          && s_name in streaming_services_settings
+          && streaming_services_settings[s_name] == true)
           return "Streams on " + stream_providers[s];
       }
     }
@@ -166,7 +171,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     shadowOpacity: 0.5,
     shadowOffset: { width: 1, height: 0},
-    width: 186, // Width and height of result images
+    width: 176, // Width and height of result images
     height: 280,
     margin: 5,
     // borderColor: 'white',

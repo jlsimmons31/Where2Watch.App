@@ -6,7 +6,8 @@ import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 // @ts-ignore
 import { global_vars, colors, screens, global_state,
-   global_streaming_services, global_rental_services } from '../data/global';
+   global_streaming_services, global_rental_services,
+   streaming_services_settings } from '../data/global';
 // @ts-ignore
 import { instance_data } from '../data/instance_data';
 
@@ -36,7 +37,7 @@ export default function MovieDetailsScreen({
   const [streamingDetails, setStreamingDetails] = useState(null);
   const [rentalDetails, setRentalDetails] = useState(null);
 
-  const fetchMovieDetails = () => {
+  const fetchMovieDetails = (imdb_rating) => {
     let tm_id = movie.jw_entity_id;
     let reqUrl = global_vars.build_jw_details_url(tm_id);
     console.log("Making request to: " + reqUrl);
@@ -44,7 +45,8 @@ export default function MovieDetailsScreen({
       if (res.data) {
         let newMovie = {
            ...movie,
-           Plot: res.data.short_description
+           Plot: res.data.short_description,
+           imdb_rating: imdb_rating
         };
         setMovie(newMovie);
       }
@@ -101,6 +103,9 @@ export default function MovieDetailsScreen({
       sub_services.amazon_prime = movie.offers.filter(x => x.provider_id == 9
         && (!x.monetization_type || x.monetization_type == "flatrate")).length > 0
         ? true : false;
+      sub_services.hbo_max = movie.offers.filter(x => x.provider_id == 384
+        && (!x.monetization_type || x.monetization_type == "flatrate")).length > 0
+        ? true : false;
       setStreamingDetails(sub_services);
       global_streaming_services[movie.id] = sub_services;
 
@@ -117,7 +122,7 @@ export default function MovieDetailsScreen({
     }
     setMovie(movieCopy);
     // Get more details such as plot.
-    fetchMovieDetails();
+    fetchMovieDetails(movieCopy.imdb_rating);
   }, []);
 
   const get_rental_price = (providerId, presentationType) => {
@@ -129,21 +134,44 @@ export default function MovieDetailsScreen({
 
   const space = () => { return (<View style={{marginVertical: 10}} />) }; // Gives an additional 20 pixels of space
 
-  const renderStreaming = (serviceName:String) => {
-    if (streamingDetails) {
-      if ((serviceName == "Netflix" && streamingDetails.netflix == true)
-        || (serviceName == "Hulu" && streamingDetails.hulu == true)
-        || (serviceName == "Disney+" && streamingDetails.disney == true
-        || (serviceName == "Amazon Prime" && streamingDetails.amazon_prime == true))) {
-          return serviceName + ": Yes";
+  const renderStreaming = () => {
+    if (!streamingDetails) {
+      return (null);
+    }
+
+    let jsx = [];
+    jsx.push(<Text key="header" style={styles.movieInfoText}>Available to stream on:</Text>);
+
+    for (let serviceName in streaming_services_settings) {
+      let avail = false;
+      switch (serviceName) {
+        case "Netflix":
+          avail = streamingDetails.netflix;
+          break;
+        case "Hulu":
+          avail = streamingDetails.hulu;
+          break;
+        case "Disney+":
+          avail = streamingDetails.disney;
+          break;
+        case "Amazon Prime":
+          avail = streamingDetails.amazon_prime;
+          break;
+        case "HBO Max":
+          avail = streamingDetails.hbo_max;
+          break;
+        default:
+          break;
       }
-      else {
-        return serviceName + ": No";
+      let showSvcName = serviceName in streaming_services_settings 
+        && streaming_services_settings[serviceName] == true;
+      if (showSvcName) {
+        let txt = serviceName + ": " + (avail ? "Yes" : "No");
+        jsx.push(<Text key={serviceName} style={styles.movieInfoTextBold}>{txt}</Text>);
       }
     }
-    else {
-      return "";
-    }
+
+    return jsx.length > 1 ? (<View>{jsx}</View>) : (null);
   }
 
   const renderRentals = (serviceName:String) => {    
@@ -172,9 +200,14 @@ export default function MovieDetailsScreen({
 
   const renderMoviePlot = () => {
     if (movie.Plot) {
-      return moviePlotShortened ?
-        movie.Plot.substring(0, 120) + "...\n(Click to show full plot)"
-        : movie.Plot + "\n(Click to hide full plot)";
+      if (movie.Plot.length > 180) {
+        return moviePlotShortened ?
+          movie.Plot.substring(0, 150) + "...\n(Click to show full plot)"
+          : movie.Plot + "\n(Click to hide full plot)";
+        }
+      else {
+        return movie.Plot;
+      }
     }
     else return "";
   }
@@ -218,16 +251,9 @@ export default function MovieDetailsScreen({
             {renderMoviePlot()}
         </Text>
         {space()}
-        <Text style={styles.movieInfoText}>Available to stream on:</Text>
-        <Text style={styles.movieInfoTextBold}>{renderStreaming("Netflix")}</Text>
-        <Text style={styles.movieInfoTextBold}>{renderStreaming("Hulu")}</Text>
-        <Text style={styles.movieInfoTextBold}>{renderStreaming("Disney+")}</Text>
-        <Text style={styles.movieInfoTextBold}>{renderStreaming("Amazon Prime")}</Text>
+        { renderStreaming() }
         {space()}
-        { renderRentals() } 
-        {/* <Text style={styles.movieInfoTextBold}>{renderRental("Amazon Prime")}</Text>
-        <Text style={styles.movieInfoTextBold}>{renderRental("iTunes")}</Text>
-        <Text style={styles.movieInfoTextBold}>{renderRental("Fandango Now")}</Text> */}
+        { renderRentals() }
         </View>
       </ScrollView>
     </RootSiblingParent>
@@ -250,7 +276,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   movieInfoTopTextContainer: {
-    width: '100%'
+    width: '90%'
   },
   movieInfoBottom: {
     padding: 20

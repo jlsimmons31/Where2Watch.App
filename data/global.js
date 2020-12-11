@@ -17,7 +17,12 @@ const global_vars = {
         // %7B and %7D are { and }
     },
     build_jw_img_url: (img_path) => {
-        return "https://images.justwatch.com" + img_path.replace("{profile}", "s166/image.webp");
+        if (img_path) {
+            return "https://images.justwatch.com" + img_path.replace("{profile}", "s166/image.webp");
+        }
+        else {
+            return "https://748073e22e8db794416a-cc51ef6b37841580002827d4d94d19b6.ssl.cf3.rackcdn.com/not-found.png";
+        }
     },
     build_jw_details_url: (tm_id) => {
         return "https://apis.justwatch.com/content/titles/movie/"
@@ -50,5 +55,13 @@ const screens = { my_list: null };
 const global_streaming_services = {};
 const global_rental_services = {};
 
+const streaming_services_settings = {
+    "Netflix": true,
+    "Hulu": true,
+    "Amazon Prime": true,
+    "Disney+": true,
+    "HBO Max": true,
+}
+
 module.exports = { global_vars, colors, screens, global_state,
-     global_streaming_services, global_rental_services };
+     global_streaming_services, global_rental_services, streaming_services_settings };

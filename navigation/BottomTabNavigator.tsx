@@ -99,10 +99,7 @@ function TabThreeNavigator() {
       <TabThreeStack.Screen
         name="SettingsScreen"
         component={SettingsScreen}
-        options={{ headerTitle: 'Settings', headerStyle: {
-          backgroundColor: colors.main_background
-        },
-        headerTitleAlign: "left", headerTintColor: 'black' }}
+        options={{headerShown: false}}
       />
     </TabThreeStack.Navigator>
   );
